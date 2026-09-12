@@ -8,10 +8,16 @@ For more information about changelogs, check [Keep a Changelog](http://keepachan
 ## [Unreleased]
 
 * [Breaking change] Answer `Crest::Photo#property` where `#to_s` used to answer, and leave a
-  picture that is neither a PNG nor a JPEG off the card -- warned about once on stderr, which a
-  host already collects -- rather than raising. A card without a picture beats a 500 on a route
+  picture that is neither a PNG nor a JPEG off the card -- warned about on stderr, which a host
+  already collects -- rather than raising. A card without a picture beats a 500 on a route
   that is public by definition, and a `to_s` that can answer nil is a trap for anyone
   interpolating one
+* [Breaking change] Drop `Crest::Photo.of` and the process-wide hash of pictures behind it, so
+  `Crest::Card` builds a `Crest::Photo` and the gem holds no mutable global state at all. It saved
+  one file read and one base64 of a few kilobytes on a route hit occasionally, and charged for it
+  with a hash keyed on whatever was handed in -- the image bytes themselves, where a host passes
+  bytes -- never evicted, growing without bound for any host whose `photo` callable resolves to
+  more than one picture, and blind to a file that changed on disk
 * [Feature] Say that the card is an organization's: `N:` carries the one name a business has,
   which is what makes `name` a single setting rather than a compromise
 

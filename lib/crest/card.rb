@@ -34,7 +34,7 @@ module Crest
         "TEL;TYPE=CELL:#{@phone}",
         ("URL:#{@url}" if @url),
         ("EMAIL;TYPE=INTERNET:#{@email}" if @email),
-        (Photo.of(@photo).property if @photo),
+        (Photo.new(@photo).property if @photo),
         'END:VCARD',
       ].compact
     end

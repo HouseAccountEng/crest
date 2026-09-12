@@ -4,16 +4,8 @@ module Crest
     # The first bytes of each image format a phone will read a saved card's picture from.
     SIGNATURES = { 'PNG' => "\x89PNG".b, 'JPEG' => "\xFF\xD8\xFF".b }
 
-    # What a host hears, once, about a picture no phone would draw.
+    # What a host hears about a picture no phone would draw.
     UNREADABLE = 'crest: the photo is neither a PNG nor a JPEG, so the card goes out without it'
-
-    # The picture a path or a string of bytes stands for, read from disk only the first time,
-    # so a card handed out a thousand times costs one read and one encoding.
-    # @return [Crest::Photo] picture that file holds, or those bytes are.
-    def self.of(photo)
-      @read ||= {}
-      @read[photo] ||= new photo
-    end
 
     # @param photo [String, Pathname] image bytes, or the file to read them from.
     def initialize(photo)
