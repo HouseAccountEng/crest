@@ -55,19 +55,6 @@ a value read once at boot would be wrong in one of them until a restart.
 The picture is bytes, or a path the gem reads. It is read from disk once, and PNG and JPEG are
 told apart by the image's own first bytes rather than by anything you have to declare.
 
-## Why a route and not an engine to mount
-
-You name the path, because the filename is your app's own name. And because it is a route rather
-than an engine, the line goes wherever you want it — inside a `scope`, behind a `constraints`,
-under a subdomain — which a mount point cannot do.
-
-## Why the controller is not your ApplicationController
-
-`Crest::CardsController` descends from `ActionController::Base`, not from your
-`ApplicationController`. That is deliberate and it is the surprising half: the card is public by
-definition — a phone fetches it with no session — so an inherited `before_action :authenticate`
-would refuse the one request the gem exists to answer.
-
 ## Without Rails
 
 The builder is plain Ruby and loads on its own, Rails or no Rails:
