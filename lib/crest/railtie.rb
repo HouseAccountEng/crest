@@ -1,14 +1,15 @@
 require 'crest/routes'
 
 module Crest
-  # Teaches a host's routes file the `crest` method, and loads the controller that answers it.
-  class Railtie < ::Rails::Railtie
-    initializer 'crest.routes' do |app|
-      ActionDispatch::Routing::Mapper.include Crest::Routes
+  # Left to Ruby to load when a request first names it. Requiring it at boot would load
+  # ActionController::Base before the host had finished initializing, which costs boot time and
+  # which Rails reports as a prematurely executed load hook.
+  autoload :CardsController, 'crest/cards_controller'
 
-      # Loaded once the routes are drawn, so the controller inherits the host's own URL helpers
-      # the way a controller the host wrote does.
-      app.config.to_prepare { require 'crest/cards_controller' }
+  # Teaches a host's routes file the `crest` method.
+  class Railtie < ::Rails::Railtie
+    initializer 'crest.routes' do
+      ActionDispatch::Routing::Mapper.include Crest::Routes
     end
   end
 end

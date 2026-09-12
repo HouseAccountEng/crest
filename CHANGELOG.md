@@ -7,6 +7,13 @@ For more information about changelogs, check [Keep a Changelog](http://keepachan
 
 ## [Unreleased]
 
+## 1.0.1 - 2026-09-11
+
+* [Fix] Let Ruby autoload `Crest::CardsController` when a request first names it, rather than
+  requiring it from a `to_prepare` block. `to_prepare` runs before the host has finished
+  initializing, so the require pulled in `ActionController::Base` there -- which costs a host
+  its boot time and which Rails reports as a prematurely executed load hook
+
 ## 1.0.0 - 2026-09-11
 
 * [Breaking change] Answer `Crest::Photo#property` where `#to_s` used to answer, and leave a
