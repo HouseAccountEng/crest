@@ -7,9 +7,11 @@ For more information about changelogs, check [Keep a Changelog](http://keepachan
 
 ## [Unreleased]
 
-* [Feature] Say that the card is an organization's: `N:` carries the one name a business has,
-  which is what makes `name` a single setting rather than a compromise
-
+* [Breaking change] Answer `Crest::Photo#property` where `#to_s` used to answer, and leave a
+  picture that is neither a PNG nor a JPEG off the card -- warned about once on stderr, which a
+  host already collects -- rather than raising. A card without a picture beats a 500 on a route
+  that is public by definition, and a `to_s` that can answer nil is a trap for anyone
+  interpolating one
 * [Feature] Say that the card is an organization's: `N:` carries the one name a business has,
   which is what makes `name` a single setting rather than a compromise
 
