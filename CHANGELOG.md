@@ -7,6 +7,11 @@ For more information about changelogs, check [Keep a Changelog](http://keepachan
 
 ## [Unreleased]
 
+## 0.1.1 - 2026-09-11
+
+* [Fix] Name HouseAccount, Inc. as the copyright holder in the license, which 0.1.0 shipped
+  naming the author instead
+
 ## 0.1.0 - 2026-09-11
 
 * [Feature] Build a vCard 3.0 from a name, a number and whatever else is worth saving --
