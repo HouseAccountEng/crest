@@ -3,7 +3,7 @@
 A contact card your Rails app hands out, so a text from an unknown number arrives under a name.
 
 `GET /houseaccount.vcf` answers with a vCard. A phone offers to save it, and from then on your
-messages come from *HouseAccount* rather than from `+1 800 555 0100`.
+messages come from *HouseAccount* rather than from `800-555-0100`.
 
 ## How to install
 
