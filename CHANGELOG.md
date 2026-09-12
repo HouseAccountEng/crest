@@ -7,6 +7,8 @@ For more information about changelogs, check [Keep a Changelog](http://keepachan
 
 ## [Unreleased]
 
+## 1.0.0 - 2026-09-11
+
 * [Breaking change] Answer `Crest::Photo#property` where `#to_s` used to answer, and leave a
   picture that is neither a PNG nor a JPEG off the card -- warned about on stderr, which a host
   already collects -- rather than raising. A card without a picture beats a 500 on a route

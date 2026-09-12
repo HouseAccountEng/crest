@@ -14,12 +14,12 @@ gem install crest
 Or, in your `Gemfile`:
 
 ```ruby
-gem 'crest', '~> 0.1.0'
+gem 'crest', '~> 1.0'
 ```
 
-Crest is below `1.0`, so the pin stops short of `0.2.0` rather than admitting every `0.x`:
-`~> major.minor` only promises what it says once the major is real. From `1.0` on it will be
-`~> 1.0`, and `bundle update` will never cross a breaking change.
+`~> major.minor` is what makes that safe: `bundle update` takes every fix and every feature
+Crest ships, and never crosses a breaking change, because the major only moves when the API
+does — and from `1.0` on it moves only on purpose.
 
 ## Handing out a card
 
