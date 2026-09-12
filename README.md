@@ -36,7 +36,7 @@ Crest.configure do |config|
   config.name  = 'HouseAccount'
   config.org   = 'HouseAccount'
   config.url   = 'https://houseaccount.com/'
-  config.email = 'hello@houseaccount.com'
+  config.email = 'support@houseaccount.com'
   config.photo = Rails.root.join 'public/cube.png'
   config.phone = -> { Twilio.sender }
 end
