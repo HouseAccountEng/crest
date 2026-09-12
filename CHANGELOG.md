@@ -7,6 +7,12 @@ For more information about changelogs, check [Keep a Changelog](http://keepachan
 
 ## [Unreleased]
 
+* [Feature] Say that the card is an organization's: `N:` carries the one name a business has,
+  which is what makes `name` a single setting rather than a compromise
+
+* [Feature] Say that the card is an organization's: `N:` carries the one name a business has,
+  which is what makes `name` a single setting rather than a compromise
+
 ## 0.1.1 - 2026-09-11
 
 * [Fix] Name HouseAccount, Inc. as the copyright holder in the license, which 0.1.0 shipped

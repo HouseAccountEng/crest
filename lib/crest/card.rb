@@ -1,12 +1,12 @@
 require 'crest/photo'
 
 module Crest
-  # A contact card a phone offers to save, written as the vCard 3.0 every phone reads.
+  # An organization's contact card, written as the vCard 3.0 a phone offers to save.
   class Card
     # What a line may hold before a vCard folds it, less the space that continues it.
     FOLD = 74
 
-    # @param name [String] name the card is saved under.
+    # @param name [String] organization the card is saved under.
     # @param phone [String] number in the form a phone should dial it.
     # @param url [String] address of the site behind the name.
     # @param email [String] address somebody may write back to.

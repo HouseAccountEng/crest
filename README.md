@@ -55,6 +55,14 @@ a value read once at boot would be wrong in one of them until a restart.
 The picture is bytes, or a path the gem reads. It is read from disk once, and PNG and JPEG are
 told apart by the image's own first bytes rather than by anything you have to declare.
 
+**The card is an organization's.** `N:` carries the one name a business has, which is why `name`
+is a single setting. A person's card wants a given name and a family name in their own fields,
+and Crest does not take them.
+
+**The card is an organization's.** `N:` carries the one name a business has, which is why `name`
+is a single setting. A person's card wants a given name and a family name in their own fields,
+and Crest does not take them.
+
 ## Without Rails
 
 The builder is plain Ruby and loads on its own, Rails or no Rails:
