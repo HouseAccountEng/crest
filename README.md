@@ -3,7 +3,7 @@
 A contact card your Rails app hands out, so a text from an unknown number arrives under a name.
 
 `GET /houseaccount.vcf` answers with a vCard. A phone offers to save it, and from then on your
-messages come from *HouseAccount* rather than from `800-555-0100`.
+messages come from *HouseAccount* rather than from `774-468-7322`.
 
 ## How to install
 
@@ -62,7 +62,7 @@ The builder is plain Ruby and loads on its own, Rails or no Rails:
 ```ruby
 require 'crest/card'
 
-Crest::Card.new(name: 'HouseAccount', phone: '+18005550100',
+Crest::Card.new(name: 'HouseAccount', phone: '+17744687322',
                 url: 'https://houseaccount.com/', photo: 'cube.png').to_s
 ```
 
