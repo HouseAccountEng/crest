@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crest — give your Rails app a vCard</title>
+<meta name="description" content="A Ruby gem that answers a .vcf route with the contact card a
+phone offers to save, so a text from an unknown number arrives under a name.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon-96x96.png" type="image/png" sizes="96x96">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:title" content="Crest">
+<meta property="og:description" content="Give your Rails app a vCard. One line in routes.rb
+answers with the contact card a phone offers to save.">
+<meta property="og:type" content="website">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Public+Sans:wght@400;500&family=Quicksand:wght@500&display=swap">
+  <style>
+    :root {
+      --cream: #f1ebdf; --dim: #b3a894; --gold: #d8b455; --gold-lit: #efd08a;
+      --gold-dim: rgba(216, 180, 85, 0.34); --ground: #123027; --ink: #080c11;
+      --panel: rgba(9, 13, 17, 0.88); --sunk: rgba(0, 0, 0, 0.4);
+      --head: 'Playfair Display', Georgia, serif;
+      --text: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+      --mono: ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box }
+
+    /* The sett: two runs of blocks crossing at right angles, the overchecks laid over them, and
+       a fine diagonal standing in for the twill a real cloth is woven on. */
+    body {
+      margin: 0; color: var(--cream); font-family: var(--text);
+      background-color: var(--ground);
+      background-image:
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.022) 0 2px, transparent 2px 4px),
+        repeating-linear-gradient(90deg, transparent 0 196px,
+          rgba(216,180,85,0.40) 196px 200px, transparent 200px 224px),
+        repeating-linear-gradient(0deg, transparent 0 196px,
+          rgba(216,180,85,0.40) 196px 200px, transparent 200px 224px),
+        repeating-linear-gradient(90deg, transparent 0 94px,
+          rgba(158,43,43,0.42) 94px 99px, transparent 99px 224px),
+        repeating-linear-gradient(0deg, transparent 0 94px,
+          rgba(158,43,43,0.42) 94px 99px, transparent 99px 224px),
+        repeating-linear-gradient(90deg, rgba(8,12,18,0.58) 0 54px,
+          rgba(21,36,60,0.52) 54px 134px, rgba(8,12,18,0.58) 134px 162px,
+          transparent 162px 224px),
+        repeating-linear-gradient(0deg, rgba(8,12,18,0.58) 0 54px,
+          rgba(21,36,60,0.52) 54px 134px, rgba(8,12,18,0.58) 134px 162px,
+          transparent 162px 224px);
+    }
+
+    h1, h2, .display { font-family: var(--head); font-weight: 600; letter-spacing: -0.01em }
+    a { color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-dim) }
+    a:hover { color: var(--gold-lit) }
+    code { font-family: var(--mono); font-size: 0.92em }
+    .quiet { color: var(--dim) }
+    .file { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em;
+            color: var(--gold); display: block; margin: 0 0 7px }
+    .plain { font-size: 12.5px; letter-spacing: 0.04em; color: var(--dim) }
+
+    .sheet { max-width: 1040px; margin: clamp(12px, 1.4vw, 18px) auto; background: var(--panel);
+             border: 1px solid var(--gold-dim); border-radius: 6px;
+             box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9) }
+    .band { height: 9px; background:
+            repeating-linear-gradient(90deg, #15243c 0 22px, #0b0f14 22px 30px,
+              #16302a 30px 58px, #9e2b2b 58px 62px, #16302a 62px 84px,
+              #0b0f14 84px 92px, #d8b455 92px 96px, #0b0f14 96px 104px) }
+    .band.top { border-radius: 5px 5px 0 0 }
+    .band.bottom { border-radius: 0 0 5px 5px }
+    .pad { padding-left: clamp(22px, 4vw, 56px); padding-right: clamp(22px, 4vw, 56px) }
+
+    .top { padding-top: 14px; padding-bottom: 14px; display: flex; gap: 20px;
+           justify-content: space-between; align-items: center;
+           border-bottom: 1px solid var(--gold-dim) }
+    .wordmark { display: flex; align-items: center; gap: 11px }
+    .wordmark span { font-family: var(--head); font-size: 21px; letter-spacing: 0.01em }
+
+    h1 { font-size: clamp(31px, 3.4vw, 43px); line-height: 1.05; margin: 0 0 12px }
+    .lede { font-size: clamp(15.5px, 1.1vw, 18px); line-height: 1.55; margin: 0; max-width: 44em }
+
+    .work { display: grid; grid-template-columns: minmax(0, 1fr) 296px;
+            gap: clamp(26px, 4vw, 56px); align-items: start; margin-top: clamp(22px, 2.2vw, 26px) }
+    @media (max-width: 880px) { .work { grid-template-columns: minmax(0, 1fr) } }
+
+    pre { background: var(--sunk); border: 1px solid var(--gold-dim); border-radius: 5px;
+          padding: 12px 16px; overflow-x: auto; font-size: 13.5px; line-height: 1.55;
+          font-family: var(--mono); margin: 0 0 13px; color: var(--cream) }
+    pre .k { color: var(--gold) } pre .s { color: #8fc7a0 } pre .c { color: var(--dim) }
+    .after { margin: -16px 0 26px; font-size: 13.5px; line-height: 1.6 }
+
+    /* the card the page hands out, drawn as a phone would draw it once it is saved */
+    .vcard { display: block; border: 1px solid var(--gold-dim); border-radius: 8px;
+             background: var(--sunk); padding: 18px 20px 17px; text-align: center;
+             color: var(--cream); transition: border-color 0.2s ease, transform 0.2s ease }
+    .vcard:hover { border-color: var(--gold); transform: translateY(-2px); color: var(--cream) }
+    .vcard img { width: 66px; height: 66px; display: block; margin: 0 auto 10px }
+    .vcard b { display: block; font-family: var(--head); font-weight: 600; font-size: 21px }
+    .vcard .org { display: block; font-size: 12.5px; color: var(--dim); margin-top: 3px }
+    .vcard dl { margin: 13px 0 0; padding: 12px 0 0; border-top: 1px solid var(--gold-dim);
+                text-align: left; font-size: 12.5px; line-height: 1.5 }
+    .vcard dt { color: var(--dim); font-size: 10.5px; letter-spacing: 0.14em;
+                text-transform: uppercase }
+    .vcard dd { margin: 1px 0 7px; font-family: var(--mono); font-size: 12px;
+                overflow-wrap: anywhere }
+    .vcard dd:last-child { margin-bottom: 0 }
+    .vcard .cta { display: block; margin-top: 14px; padding: 8px; border-radius: 4px;
+                  background: var(--gold); color: var(--ink); font-weight: 500; font-size: 13.5px }
+    .note { font-size: 12.5px; line-height: 1.5; color: var(--dim); margin: 9px 2px 0 }
+
+    .foot { padding-top: 12px; padding-bottom: 12px; border-top: 1px solid var(--gold-dim);
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px }
+
+    /* The houseaccount lockup, drawn as the app draws it: two blues that become one on hover. */
+    .lockup { font-family: 'Quicksand', 'Trebuchet MS', sans-serif; font-weight: 500;
+              letter-spacing: 0.01em; font-size: 20px; line-height: 1; white-space: nowrap;
+              color: #9cc0ec; border-bottom: 0 }
+    .lockup .house { color: #3b8ae8 }
+    .lockup:hover, .lockup:hover .house { color: #9cc0ec }
+    .lockup svg { width: 16.23px; height: 16.23px; top: 0.72px; margin-right: 4.2px;
+                  position: relative; vertical-align: baseline }
+  </style>
+</head>
+<body>
+<div class="sheet">
+  <div class="band top"></div>
+
+  <div class="pad top">
+    <span class="wordmark">
+      <img src="icon.svg" alt="" width="26" height="26" style="display: block">
+      <span>Crest</span>
+    </span>
+    <span style="display: flex; gap: 24px">
+      <a href="https://github.com/HouseAccountEng/crest" style="font-size: 14.5px">Source code</a>
+      <a href="https://rubydoc.info/gems/crest" style="font-size: 14.5px">Documentation</a>
+    </span>
+  </div>
+
+  <div class="pad" style="padding-top: clamp(24px, 2.8vh, 32px); padding-bottom: clamp(22px, 2.4vh, 24px)">
+    <h1>Give your Rails app a vCard</h1>
+    <p class="lede quiet">Crest answers <code>GET /houseaccount.vcf</code> with a contact card. A
+      phone offers to save it, and your next text arrives under a name instead of ten digits.</p>
+
+    <div class="work">
+      <div>
+        <span class="file">Gemfile</span>
+        <pre><span class="k">gem</span> <span class="s">'crest'</span>, <span class="s">'~&gt; 1.0'</span></pre>
+        <span class="file">config/routes.rb</span>
+        <pre><span class="k">crest</span> <span class="s">'houseaccount.vcf'</span></pre>
+
+        <span class="file">config/initializers/crest.rb</span>
+        <pre>Crest.configure <span class="k">do</span> |config|
+  config.name  = <span class="s">'HouseAccount'</span>
+  config.url   = <span class="s">'https://houseaccount.com/'</span>
+  config.photo = Rails.root.join <span class="s">'public/cube.png'</span>
+  config.phone = -&gt; { Twilio.sender }
+<span class="k">end</span></pre>
+      </div>
+
+      <div>
+        <a class="vcard" href="houseaccount.vcf">
+          <img src="cube.svg" alt="">
+          <b>HouseAccount</b>
+          <span class="org">HouseAccount, Inc.</span>
+          <dl>
+            <dt>mobile</dt><dd>774-468-7322</dd>
+            <dt>email</dt><dd>support@houseaccount.com</dd>
+            <dt>url</dt><dd>houseaccount.com</dd>
+          </dl>
+          <span class="cta">Add to Contacts</span>
+        </a>
+        <p class="note">That is the file the route above answers with, written by Crest itself.
+          Open it on a phone and the contact sheet comes up.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pad foot">
+    <span class="plain">MIT license</span>
+    <span class="plain" style="display: flex; align-items: baseline; gap: 8px">Built at
+      <a class="lockup" href="https://houseaccount.com"><svg viewBox="0 0 512 512" aria-hidden="true"><g fill="none" stroke="#3b8ae8" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"><path d="M256.0 302.0 Q256.0 256.0 295.8 233.0 L406.2 169.3 Q446.0 146.3 446.0 192.3 L446.0 319.7 Q446.0 365.7 406.2 388.7 L295.8 452.4 Q256.0 475.4 256.0 429.4 Z" fill="#1B5288"/><path d="M216.2 59.6 Q256.0 36.6 295.8 59.6 L406.2 123.3 Q446.0 146.3 446.0 192.3 L446.0 319.7 Q446.0 365.7 406.2 388.7 L295.8 452.4 Q256.0 475.4 216.2 452.4 L105.8 388.7 Q66.0 365.7 66.0 319.7 L66.0 192.3 Q66.0 146.3 105.8 123.3 Z"/><path d="M256.0 256.0 L95.4 163.3"/><path d="M256.0 256.0 L416.6 163.3"/><path d="M256.0 256.0 L256.0 441.4"/></g></svg><span class="house">house</span>account</a>
+    </span>
+  </div>
+
+  <div class="band bottom"></div>
+</div>
+</body>
+</html>
